@@ -16,12 +16,12 @@ $currentAdmin = current_user();
 // Handle Role Change
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'toggle_role') {
     require_csrf();
-    $targetId = clean_int($_POST['user_id'] ?? 0);
+    $targetId = clean_id($_POST['user_id'] ?? '');
     $newRole = clean_string($_POST['new_role'] ?? 'customer');
 
-    if ($targetId === $currentAdmin['id']) {
+    if ($targetId === (string)$currentAdmin['id']) {
         flash('error', 'You cannot change your own administrative role.', 'warning');
-    } else if (in_array($newRole, ['admin', 'customer'])) {
+    } else if (!empty($targetId) && in_array($newRole, ['admin', 'customer'])) {
         User::updateRole($targetId, $newRole);
         flash('success', 'User role updated successfully.');
     }
@@ -60,7 +60,7 @@ require_once __DIR__ . '/includes/header.php';
             <tr>
               <td>
                 <strong><?= e($u['name']) ?></strong>
-                <?php if ($u['id'] === $currentAdmin['id']): ?>
+                <?php if ((string)$u['id'] === (string)$currentAdmin['id']): ?>
                   <span style="font-size:10px; background:#dcfce7; color:#15803d; padding:2px 6px; border-radius:4px; margin-left:6px; font-weight:700;">(You)</span>
                 <?php endif; ?>
               </td>
@@ -74,7 +74,7 @@ require_once __DIR__ . '/includes/header.php';
               </td>
               <td><?= time_ago($u['created_at']) ?></td>
               <td>
-                <?php if ($u['id'] !== $currentAdmin['id']): ?>
+                <?php if ((string)$u['id'] !== (string)$currentAdmin['id']): ?>
                   <form method="POST" action="" style="display:inline;">
                     <?= csrf_field() ?>
                     <input type="hidden" name="action" value="toggle_role">

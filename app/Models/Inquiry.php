@@ -1,115 +1,133 @@
 <?php
 /**
- * Inquiry Model (Wholesale Quote Requests)
+ * Inquiry Model (MongoDB)
  * Durva Eco Ware
  */
 
 require_once BASE_PATH . '/config/database.php';
+require_once BASE_PATH . '/app/Helpers/sanitizer.php';
+require_once BASE_PATH . '/app/Models/Product.php';
+require_once BASE_PATH . '/app/Models/User.php';
 
 class Inquiry {
-    public static function create(array $data): int {
-        $db = get_db();
-        $stmt = $db->prepare("
-            INSERT INTO `inquiries`
-            (`user_id`, `product_id`, `name`, `email`, `phone`, `company`, `product_interest`, `quantity`, `message`, `status`, `created_at`)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'new', NOW())
-        ");
-        $stmt->execute([
-            !empty($data['user_id']) ? (int)$data['user_id'] : null,
-            !empty($data['product_id']) ? (int)$data['product_id'] : null,
-            $data['name'],
-            !empty($data['email']) ? trim(strtolower($data['email'])) : null,
-            $data['phone'],
-            $data['company'] ?? null,
-            $data['product_interest'] ?? null,
-            $data['quantity'] ?? null,
-            $data['message'] ?? null
-        ]);
-
-        return (int)$db->lastInsertId();
+    private static function getCollection(): \MongoDB\Collection {
+        return get_collection('inquiries');
     }
 
-    public static function getAll(?string $status = null, ?int $limit = null, ?int $offset = null): array {
-        $db = get_db();
-        $sql = "
-            SELECT i.*, p.name AS product_name, p.slug AS product_slug, u.name AS user_name
-            FROM `inquiries` i
-            LEFT JOIN `products` p ON i.product_id = p.id
-            LEFT JOIN `users` u ON i.user_id = u.id
-        ";
-        $params = [];
+    public static function create(array $data): string {
+        $col = self::getCollection();
 
-        if ($status) {
-            $sql .= " WHERE i.status = ?";
-            $params[] = $status;
-        }
-
-        $sql .= " ORDER BY i.created_at DESC";
-
-        if ($limit !== null) {
-            $sql .= " LIMIT " . (int)$limit;
-            if ($offset !== null) {
-                $sql .= " OFFSET " . (int)$offset;
+        $productId = !empty($data['product_id']) ? (string)$data['product_id'] : null;
+        $productName = null;
+        $productSlug = null;
+        if ($productId) {
+            $product = Product::getById($productId);
+            if ($product) {
+                $productName = $product['name'];
+                $productSlug = $product['slug'];
             }
         }
 
-        $stmt = $db->prepare($sql);
-        $stmt->execute($params);
-        return $stmt->fetchAll();
-    }
-
-    public static function getById(int $id): ?array {
-        $db = get_db();
-        $stmt = $db->prepare("
-            SELECT i.*, p.name AS product_name, p.slug AS product_slug, u.name AS user_name
-            FROM `inquiries` i
-            LEFT JOIN `products` p ON i.product_id = p.id
-            LEFT JOIN `users` u ON i.user_id = u.id
-            WHERE i.id = ?
-            LIMIT 1
-        ");
-        $stmt->execute([$id]);
-        $row = $stmt->fetch();
-        return $row ?: null;
-    }
-
-    public static function getByUser(int $userId): array {
-        $db = get_db();
-        $stmt = $db->prepare("
-            SELECT i.*, p.name AS product_name, p.slug AS product_slug
-            FROM `inquiries` i
-            LEFT JOIN `products` p ON i.product_id = p.id
-            WHERE i.user_id = ?
-            ORDER BY i.created_at DESC
-        ");
-        $stmt->execute([$userId]);
-        return $stmt->fetchAll();
-    }
-
-    public static function updateStatus(int $id, string $status, ?string $notes = null): bool {
-        $db = get_db();
-        if ($notes !== null) {
-            $stmt = $db->prepare("UPDATE `inquiries` SET `status` = ?, `admin_notes` = ? WHERE `id` = ?");
-            return $stmt->execute([$status, $notes, $id]);
-        } else {
-            $stmt = $db->prepare("UPDATE `inquiries` SET `status` = ? WHERE `id` = ?");
-            return $stmt->execute([$status, $id]);
+        $userId = !empty($data['user_id']) ? (string)$data['user_id'] : null;
+        $userName = null;
+        if ($userId) {
+            $user = User::findById($userId);
+            if ($user) {
+                $userName = $user['name'];
+            }
         }
+
+        $insertData = [
+            'user_id'          => $userId,
+            'user_name'        => $userName,
+            'product_id'       => $productId,
+            'product_name'     => $productName,
+            'product_slug'     => $productSlug,
+            'name'             => $data['name'],
+            'email'            => !empty($data['email']) ? trim(strtolower($data['email'])) : null,
+            'phone'            => $data['phone'],
+            'company'          => $data['company'] ?? null,
+            'product_interest' => $data['product_interest'] ?? null,
+            'quantity'         => $data['quantity'] ?? null,
+            'message'          => $data['message'] ?? null,
+            'status'           => 'new',
+            'admin_notes'      => null,
+            'created_at'       => date('Y-m-d H:i:s')
+        ];
+
+        $res = $col->insertOne($insertData);
+        return (string)$res->getInsertedId();
     }
 
-    public static function delete(int $id): bool {
-        $db = get_db();
-        $stmt = $db->prepare("DELETE FROM `inquiries` WHERE `id` = ?");
-        return $stmt->execute([$id]);
+    public static function getAll(?string $status = null, ?int $limit = null, ?int $offset = null): array {
+        $col = self::getCollection();
+        $query = [];
+
+        if ($status) {
+            $query['status'] = $status;
+        }
+
+        $options = [
+            'sort' => ['created_at' => -1]
+        ];
+
+        if ($limit !== null) {
+            $options['limit'] = (int)$limit;
+        }
+        if ($offset !== null) {
+            $options['skip'] = (int)$offset;
+        }
+
+        $cursor = $col->find($query, $options);
+        return normalize_docs($cursor);
+    }
+
+    public static function getById(string $id): ?array {
+        $col = self::getCollection();
+        $oid = to_object_id($id);
+        $filter = $oid ? ['_id' => $oid] : ['_id' => $id];
+        $doc = $col->findOne($filter);
+        return normalize_doc($doc);
+    }
+
+    public static function getByUser(string $userId): array {
+        $col = self::getCollection();
+        $oid = to_object_id($userId);
+        $conds = [['user_id' => (string)$userId]];
+        if ($oid) {
+            $conds[] = ['user_id' => $oid];
+        }
+
+        $cursor = $col->find(['$or' => $conds], [
+            'sort' => ['created_at' => -1]
+        ]);
+        return normalize_docs($cursor);
+    }
+
+    public static function updateStatus(string $id, string $status, ?string $notes = null): bool {
+        $col = self::getCollection();
+        $oid = to_object_id($id);
+        $filter = $oid ? ['_id' => $oid] : ['_id' => $id];
+
+        $update = ['status' => $status, 'updated_at' => date('Y-m-d H:i:s')];
+        if ($notes !== null) {
+            $update['admin_notes'] = $notes;
+        }
+
+        $res = $col->updateOne($filter, ['$set' => $update]);
+        return $res->getModifiedCount() > 0 || $res->getMatchedCount() > 0;
+    }
+
+    public static function delete(string $id): bool {
+        $col = self::getCollection();
+        $oid = to_object_id($id);
+        $filter = $oid ? ['_id' => $oid] : ['_id' => $id];
+        $res = $col->deleteOne($filter);
+        return $res->getDeletedCount() > 0;
     }
 
     public static function countByStatus(): array {
-        $db = get_db();
-        $stmt = $db->query("
-            SELECT `status`, COUNT(*) as count
-            FROM `inquiries`
-            GROUP BY `status`
-        ");
+        $col = self::getCollection();
         $counts = [
             'total'       => 0,
             'new'         => 0,
@@ -117,12 +135,25 @@ class Inquiry {
             'in_progress' => 0,
             'closed'      => 0
         ];
-        while ($row = $stmt->fetch()) {
-            $st = $row['status'];
-            $c = (int)$row['count'];
-            $counts[$st] = $c;
-            $counts['total'] += $c;
+
+        try {
+            $pipeline = [
+                ['$group' => ['_id' => '$status', 'count' => ['$sum' => 1]]]
+            ];
+            $cursor = $col->aggregate($pipeline);
+            foreach ($cursor as $doc) {
+                $st = (string)$doc['_id'];
+                $c = (int)$doc['count'];
+                if (isset($counts[$st])) {
+                    $counts[$st] = $c;
+                }
+                $counts['total'] += $c;
+            }
+        } catch (\Throwable $e) {
+            // Fallback
+            $counts['total'] = $col->countDocuments();
         }
+
         return $counts;
     }
 }

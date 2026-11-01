@@ -13,8 +13,8 @@ require_once BASE_PATH . '/app/Helpers/upload.php';
 
 require_admin();
 
-$id = clean_int($_GET['id'] ?? 0);
-$isEdit = $id > 0;
+$id = clean_id($_GET['id'] ?? '');
+$isEdit = !empty($id);
 $product = $isEdit ? Product::getById($id) : null;
 
 if ($isEdit && !$product) {
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_csrf();
 
     $name = clean_string($_POST['name'] ?? '');
-    $categoryId = clean_int($_POST['category_id'] ?? 0);
+    $categoryId = clean_id($_POST['category_id'] ?? '');
     $packSize = clean_string($_POST['pack_size'] ?? '100 Pcs / Pack');
     $material = clean_string($_POST['material'] ?? 'Eco-Friendly Paper');
     $price = clean_float($_POST['price'] ?? 0);
@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $isFeatured = isset($_POST['is_featured']) ? 1 : 0;
     $isActive = isset($_POST['is_active']) ? 1 : 0;
 
-    if (empty($name) || $categoryId <= 0) {
+    if (empty($name) || empty($categoryId)) {
         flash('error', 'Product name and Category are required.', 'error');
     } else {
         $imageUrl = $product['image_url'] ?? null;

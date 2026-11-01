@@ -20,6 +20,57 @@ function clean_int($val, int $default = 0): int {
     return filter_var($val, FILTER_VALIDATE_INT) !== false ? (int)$val : $default;
 }
 
+function clean_id($val): ?string {
+    if ($val === null || $val === '') {
+        return null;
+    }
+    $val = trim((string)$val);
+    if (preg_match('/^[a-f\d]{24}$/i', $val) || preg_match('/^[0-9]+$/', $val)) {
+        return $val;
+    }
+    return null;
+}
+
+function to_object_id($id) {
+    if (empty($id)) {
+        return null;
+    }
+    if (class_exists('MongoDB\BSON\ObjectId')) {
+        if ($id instanceof \MongoDB\BSON\ObjectId) {
+            return $id;
+        }
+        if (is_string($id) && preg_match('/^[a-f\d]{24}$/i', $id)) {
+            try {
+                return new \MongoDB\BSON\ObjectId($id);
+            } catch (\Throwable $e) {
+                return null;
+            }
+        }
+    }
+    return $id;
+}
+
+function normalize_doc($doc): ?array {
+    if (!$doc) {
+        return null;
+    }
+    if (is_object($doc)) {
+        $doc = (array)$doc;
+    }
+    if (isset($doc['_id'])) {
+        $doc['id'] = (string)$doc['_id'];
+    }
+    return $doc;
+}
+
+function normalize_docs($docs): array {
+    $result = [];
+    foreach ($docs as $doc) {
+        $result[] = normalize_doc($doc);
+    }
+    return $result;
+}
+
 function clean_float($val, float $default = 0.0): float {
     return filter_var($val, FILTER_VALIDATE_FLOAT) !== false ? (float)$val : $default;
 }

@@ -15,8 +15,8 @@ require_admin();
 // Handle Delete Product
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete') {
     require_csrf();
-    $id = clean_int($_POST['id'] ?? 0);
-    if ($id > 0) {
+    $id = clean_id($_POST['id'] ?? '');
+    if (!empty($id)) {
         Product::delete($id);
         flash('success', 'Product deleted successfully.');
     }
@@ -26,11 +26,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 $pageTitle = "Product Management";
 $pageSubtitle = "Create, edit, organize categories and manage bulk packaging specifications";
 
-$selectedCatId = clean_int($_GET['category_id'] ?? 0);
+$selectedCatId = clean_id($_GET['category_id'] ?? '');
 $searchTerm = trim($_GET['q'] ?? '');
 
 $filters = [];
-if ($selectedCatId > 0) {
+if (!empty($selectedCatId)) {
     $filters['category_id'] = $selectedCatId;
 }
 if (!empty($searchTerm)) {
@@ -47,16 +47,16 @@ require_once __DIR__ . '/includes/header.php';
   <div style="display:flex; gap:10px; flex-wrap:wrap;">
     <form method="GET" action="" style="display:flex; gap:8px;">
       <select name="category_id" class="admin-select" style="width:200px;" onchange="this.form.submit()">
-        <option value="0">All Categories</option>
+        <option value="">All Categories</option>
         <?php foreach ($categories as $cat): ?>
-          <option value="<?= $cat['id'] ?>" <?= $selectedCatId === $cat['id'] ? 'selected' : '' ?>>
+          <option value="<?= $cat['id'] ?>" <?= (string)$selectedCatId === (string)$cat['id'] ? 'selected' : '' ?>>
             <?= e($cat['name']) ?>
           </option>
         <?php endforeach; ?>
       </select>
       <input type="text" name="q" value="<?= e($searchTerm) ?>" placeholder="Search product..." class="admin-input" style="width:220px;">
       <button type="submit" class="btn-admin btn-admin-secondary">Search</button>
-      <?php if ($selectedCatId > 0 || !empty($searchTerm)): ?>
+      <?php if (!empty($selectedCatId) || !empty($searchTerm)): ?>
         <a href="<?= url('admin/products.php') ?>" class="btn-admin btn-admin-secondary">Clear</a>
       <?php endif; ?>
     </form>

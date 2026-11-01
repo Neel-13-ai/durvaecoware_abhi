@@ -1,6 +1,6 @@
 <?php
 /**
- * Setting Model
+ * Setting Model (MongoDB)
  * Durva Eco Ware
  */
 
@@ -9,21 +9,27 @@ require_once BASE_PATH . '/config/database.php';
 class Setting {
     private static array $cache = [];
 
+    private static function getCollection(): \MongoDB\Collection {
+        return get_collection('settings');
+    }
+
     public static function getAll(): array {
         if (!empty(self::$cache)) {
             return self::$cache;
         }
 
         try {
-            $db = get_db();
-            $stmt = $db->query("SELECT `key_name`, `value` FROM `settings`");
+            $col = self::getCollection();
+            $cursor = $col->find();
             $settings = [];
-            while ($row = $stmt->fetch()) {
-                $settings[$row['key_name']] = $row['value'];
+            foreach ($cursor as $doc) {
+                if (isset($doc['key_name'])) {
+                    $settings[$doc['key_name']] = (string)($doc['value'] ?? '');
+                }
             }
             self::$cache = $settings;
             return $settings;
-        } catch (Exception $e) {
+        } catch (\Throwable $e) {
             return [];
         }
     }
@@ -34,34 +40,47 @@ class Setting {
     }
 
     public static function set(string $key, ?string $value, string $group = 'general'): bool {
-        $db = get_db();
-        $stmt = $db->prepare("
-            INSERT INTO `settings` (`key_name`, `value`, `group_name`, `updated_at`)
-            VALUES (?, ?, ?, NOW())
-            ON DUPLICATE KEY UPDATE `value` = VALUES(`value`), `updated_at` = NOW()
-        ");
-        $res = $stmt->execute([$key, $value, $group]);
-        self::$cache[$key] = $value;
-        return $res;
+        try {
+            $col = self::getCollection();
+            $col->updateOne(
+                ['key_name' => $key],
+                [
+                    '$set' => [
+                        'key_name'   => $key,
+                        'value'      => (string)$value,
+                        'group_name' => $group,
+                        'updated_at' => date('Y-m-d H:i:s')
+                    ]
+                ],
+                ['upsert' => true]
+            );
+            self::$cache[$key] = (string)$value;
+            return true;
+        } catch (\Throwable $e) {
+            return false;
+        }
     }
 
     public static function updateBatch(array $settings): bool {
-        $db = get_db();
-        $db->beginTransaction();
         try {
-            $stmt = $db->prepare("
-                INSERT INTO `settings` (`key_name`, `value`, `updated_at`)
-                VALUES (?, ?, NOW())
-                ON DUPLICATE KEY UPDATE `value` = VALUES(`value`), `updated_at` = NOW()
-            ");
+            $col = self::getCollection();
+            $now = date('Y-m-d H:i:s');
             foreach ($settings as $key => $value) {
-                $stmt->execute([$key, $value]);
-                self::$cache[$key] = $value;
+                $col->updateOne(
+                    ['key_name' => $key],
+                    [
+                        '$set' => [
+                            'key_name'   => $key,
+                            'value'      => (string)$value,
+                            'updated_at' => $now
+                        ]
+                    ],
+                    ['upsert' => true]
+                );
+                self::$cache[$key] = (string)$value;
             }
-            $db->commit();
             return true;
-        } catch (Exception $e) {
-            $db->rollBack();
+        } catch (\Throwable $e) {
             return false;
         }
     }

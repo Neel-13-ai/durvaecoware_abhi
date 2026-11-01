@@ -19,7 +19,7 @@ class InquiryController {
         $phone = clean_phone($_POST['phone'] ?? '');
         $email = clean_email($_POST['email'] ?? '');
         $company = clean_string($_POST['company'] ?? '');
-        $productId = clean_int($_POST['product_id'] ?? 0);
+        $productId = clean_id($_POST['product_id'] ?? '');
         $productInterest = clean_string($_POST['product_interest'] ?? '');
         $quantity = clean_string($_POST['quantity'] ?? '');
         $message = clean_string($_POST['message'] ?? '');

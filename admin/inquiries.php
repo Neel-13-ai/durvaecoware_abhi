@@ -17,22 +17,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $action = $_POST['action'];
 
     if ($action === 'update_status') {
-        $id = clean_int($_POST['id'] ?? 0);
+        $id = clean_id($_POST['id'] ?? '');
         $status = clean_string($_POST['status'] ?? 'new');
         $notes = clean_string($_POST['admin_notes'] ?? '');
 
-        if ($id > 0) {
+        if (!empty($id)) {
             Inquiry::updateStatus($id, $status, $notes);
-            flash('success', "Inquiry #DW-$id updated to " . ucfirst(str_replace('_', ' ', $status)) . ".");
+            flash('success', "Inquiry updated to " . ucfirst(str_replace('_', ' ', $status)) . ".");
         }
         redirect('admin/inquiries.php?id=' . $id);
     }
 
     if ($action === 'delete') {
-        $id = clean_int($_POST['id'] ?? 0);
-        if ($id > 0) {
+        $id = clean_id($_POST['id'] ?? '');
+        if (!empty($id)) {
             Inquiry::delete($id);
-            flash('success', "Inquiry #DW-$id deleted.");
+            flash('success', "Inquiry deleted.");
         }
         redirect('admin/inquiries.php');
     }
@@ -49,8 +49,8 @@ if (!in_array($statusFilter, ['new', 'contacted', 'in_progress', 'closed'])) {
 $inquiries = Inquiry::getAll($statusFilter);
 $counts = Inquiry::countByStatus();
 
-$selectedId = clean_int($_GET['id'] ?? 0);
-$selectedInquiry = $selectedId > 0 ? Inquiry::getById($selectedId) : null;
+$selectedId = clean_id($_GET['id'] ?? '');
+$selectedInquiry = !empty($selectedId) ? Inquiry::getById($selectedId) : null;
 
 require_once __DIR__ . '/includes/header.php';
 ?>

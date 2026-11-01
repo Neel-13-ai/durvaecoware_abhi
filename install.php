@@ -1,12 +1,12 @@
 <?php
 /**
- * 1-Click Web Installer & Setup Wizard
+ * 1-Click Web Installer & Setup Wizard (MongoDB)
  * Durva Eco Ware
  */
 
 require_once __DIR__ . '/config/app.php';
 require_once __DIR__ . '/config/database.php';
-require_once __DIR__ . '/database/migrate.php';
+require_once __DIR__ . '/database/mongo_seed.php';
 
 $requirements = [
     'php_version' => [
@@ -14,15 +14,15 @@ $requirements = [
         'pass' => version_compare(PHP_VERSION, '7.4.0', '>='),
         'detail' => 'Current: ' . PHP_VERSION
     ],
-    'pdo' => [
-        'name' => 'PDO Extension',
-        'pass' => extension_loaded('pdo'),
-        'detail' => extension_loaded('pdo') ? 'Installed' : 'Missing'
+    'ext_mongodb' => [
+        'name' => 'PHP MongoDB Extension (php_mongodb.dll)',
+        'pass' => extension_loaded('mongodb'),
+        'detail' => extension_loaded('mongodb') ? 'Installed & Enabled' : 'Missing from php.ini'
     ],
-    'pdo_mysql' => [
-        'name' => 'PDO MySQL Driver',
-        'pass' => extension_loaded('pdo_mysql'),
-        'detail' => extension_loaded('pdo_mysql') ? 'Installed' : 'Missing'
+    'mongo_library' => [
+        'name' => 'MongoDB PHP Library (mongodb/mongodb)',
+        'pass' => class_exists('MongoDB\Client'),
+        'detail' => class_exists('MongoDB\Client') ? 'Installed in vendor/' : 'Missing (run composer install)'
     ],
     'uploads_dir' => [
         'name' => 'Uploads Directory Writable',
@@ -38,32 +38,37 @@ $success = false;
 $logs = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['run_install'])) {
-    $host = trim($_POST['db_host'] ?? '127.0.0.1');
-    $port = (int)($_POST['db_port'] ?? 3306);
-    $user = trim($_POST['db_user'] ?? 'root');
-    $pass = $_POST['db_pass'] ?? '';
+    $mongoUri = trim($_POST['mongo_uri'] ?? '');
     $dbName = trim($_POST['db_name'] ?? 'durva_eco_ware');
     $adminEmail = trim($_POST['admin_email'] ?? 'admin@durvaecoware.com');
     $adminPass = $_POST['admin_pass'] ?? 'AdminPassword@123';
 
-    $res = run_migrations($host, $port, $user, $pass, $dbName);
-    $logs = $res['logs'] ?? [];
-
-    if ($res['success']) {
-        // Update admin password if custom provided
-        try {
-            $dsn = "mysql:host=$host;port=$port;dbname=$dbName;charset=utf8mb4";
-            $pdo = new PDO($dsn, $user, $pass, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
-            $hash = password_hash($adminPass, PASSWORD_BCRYPT);
-            $stmt = $pdo->prepare("UPDATE `users` SET `email` = ?, `password_hash` = ? WHERE `role` = 'admin' LIMIT 1");
-            $stmt->execute([$adminEmail, $hash]);
-            $logs[] = "✓ Admin account configured: $adminEmail";
-        } catch (Exception $e) {
-            $logs[] = "⚠ Could not update admin credentials: " . $e->getMessage();
-        }
-        $success = true;
+    if (empty($mongoUri)) {
+        $error = "Please provide your MongoDB Connection URI (e.g. mongodb+srv://... or mongodb://127.0.0.1:27017).";
     } else {
-        $error = $res['error'] ?? 'Installation encountered an error.';
+        $res = seed_mongodb($mongoUri, $dbName, $adminEmail, $adminPass);
+        $logs = $res['logs'] ?? [];
+
+        if ($res['success']) {
+            // Write updated connection details to .env
+            $envPath = BASE_PATH . '/.env';
+            $envContent = "# Durva Eco Ware - Environment Configuration\n" .
+                          "APP_NAME=\"Durva Eco Ware\"\n" .
+                          "APP_ENV=development\n" .
+                          "APP_DEBUG=true\n\n" .
+                          "# Database Connection (MongoDB)\n" .
+                          "DB_CONNECTION=mongodb\n" .
+                          "MONGODB_URI=\"" . addslashes($mongoUri) . "\"\n" .
+                          "MONGODB_DATABASE=" . $dbName . "\n\n" .
+                          "# Session & Security\n" .
+                          "SESSION_LIFETIME=86400\n";
+            @file_put_contents($envPath, $envContent);
+
+            $logs[] = "✓ Updated .env with active MongoDB URI.";
+            $success = true;
+        } else {
+            $error = $res['error'] ?? 'Installation encountered an error.';
+        }
     }
 }
 ?>
@@ -72,131 +77,150 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['run_install'])) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Durva Eco Ware - 1-Click Setup & Installer</title>
+  <title>Durva Eco Ware - MongoDB Setup & Installer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
   <style>
     :root {
       --primary: #1b6330;
-      --primary-dark: #0e3a1b;
-      --primary-light: #2f8546;
-      --accent: #d4e7cb;
-      --bg: #f4f7f2;
+      --primary-dark: #124520;
+      --accent: #d97706;
+      --bg: #f8faf7;
       --card-bg: #ffffff;
-      --text: #1b261e;
-      --text-muted: #5e6d62;
-      --border: #e0e8dc;
-      --radius: 16px;
-      --shadow: 0 16px 40px rgba(18, 56, 28, 0.08);
+      --text: #1a221b;
+      --text-muted: #5f7062;
+      --border: #e0e7df;
+      --danger: #dc2626;
+      --success: #16a34a;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
       background: var(--bg);
       color: var(--text);
-      line-height: 1.6;
-      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 30px 20px;
+      min-height: 100vh;
+      padding: 40px 20px;
     }
     .install-card {
       background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
       max-width: 680px;
       width: 100%;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
       overflow: hidden;
     }
     .install-header {
-      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      background: #11381c;
       color: #fff;
-      padding: 35px 35px 30px;
+      padding: 35px 30px;
       text-align: center;
-    }
-    .install-header .badge {
-      display: inline-block;
-      background: rgba(255,255,255,0.18);
-      padding: 4px 14px;
-      border-radius: 50px;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin-bottom: 12px;
     }
     .install-header h1 {
       font-family: 'Playfair Display', serif;
-      font-size: 30px;
-      margin-bottom: 6px;
+      font-size: 28px;
+      margin-bottom: 8px;
     }
     .install-header p {
-      color: #d1e3d4;
+      color: #bbf7d0;
       font-size: 14px;
     }
+    .badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
     .install-body {
-      padding: 35px;
+      padding: 30px;
     }
     .req-list {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 25px;
-      padding-bottom: 25px;
-      border-bottom: 1px solid var(--border);
+      background: #fbfcf9;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 24px;
     }
     .req-item {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      padding: 10px 14px;
-      background: #fbfdfa;
-      border-radius: 8px;
-      border: 1px solid #edf2ea;
-      font-size: 13px;
-      font-weight: 500;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px dashed var(--border);
+      font-size: 13.5px;
     }
-    .req-item .status {
+    .req-item:last-child { border-bottom: none; }
+    .status {
       font-weight: 700;
       font-size: 12px;
-      padding: 2px 8px;
-      border-radius: 4px;
+      padding: 3px 8px;
+      border-radius: 6px;
     }
-    .status-pass { background: #dcfce7; color: #15803d; }
-    .status-fail { background: #fee2e2; color: #b91c1c; }
-
+    .status-pass { background: #dcfce7; color: var(--success); }
+    .status-fail { background: #fee2e2; color: var(--danger); }
+    .guide-box {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 24px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .guide-box h4 {
+      color: #b45309;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    .guide-box ol {
+      margin-left: 20px;
+      margin-top: 6px;
+    }
+    .guide-box code {
+      background: #fef3c7;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
     .form-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 15px;
+      margin-bottom: 24px;
+    }
+    .form-grid-2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 15px;
     }
     .form-group {
-      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
     }
-    .form-group.full {
-      grid-column: 1 / -1;
-    }
-    label {
-      display: block;
+    .form-group label {
       font-size: 13px;
       font-weight: 600;
-      margin-bottom: 6px;
       color: var(--text);
     }
-    input[type="text"], input[type="password"], input[type="email"], input[type="number"] {
-      width: 100%;
+    .form-group input, .form-group textarea {
       padding: 11px 14px;
-      border: 1.5px solid var(--border);
+      border: 1px solid var(--border);
       border-radius: 8px;
       font-size: 14px;
+      background: #fbfcf9;
       font-family: inherit;
-      background: #fbfdfa;
-      transition: border-color .2s;
     }
-    input:focus {
+    .form-group input:focus, .form-group textarea:focus {
       outline: none;
       border-color: var(--primary);
       background: #fff;
@@ -254,7 +278,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['run_install'])) {
       padding: 15px;
       border-radius: 8px;
       margin: 20px 0;
-      max-height: 180px;
+      max-height: 200px;
       overflow-y: auto;
       line-height: 1.5;
     }
@@ -270,28 +294,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['run_install'])) {
 
 <div class="install-card">
   <div class="install-header">
-    <span class="badge">Automatic Setup Wizard</span>
+    <span class="badge">MongoDB Setup Wizard</span>
     <h1>Durva Eco Ware</h1>
-    <p>Configure database and install default assets in 1 click</p>
+    <p>Connect your MongoDB Atlas cluster or local database in 1 click</p>
   </div>
 
   <div class="install-body">
     <!-- Server Requirements -->
-    <h3 style="font-size: 15px; margin-bottom: 12px;">1. System Health Check</h3>
+    <h3 style="font-size: 15px; margin-bottom: 12px;">1. System & Extension Check</h3>
     <div class="req-list">
       <?php foreach ($requirements as $req): ?>
         <div class="req-item">
-          <span><?= e($req['name']) ?></span>
+          <div>
+            <strong><?= e($req['name']) ?></strong>
+            <div style="font-size: 11px; color: var(--text-muted);"><?= e($req['detail']) ?></div>
+          </div>
           <span class="status <?= $req['pass'] ? 'status-pass' : 'status-fail' ?>">
-            <?= $req['pass'] ? '✓ Ready' : '✗ Failed' ?>
+            <?= $req['pass'] ? '✓ Ready' : '✗ Action Needed' ?>
           </span>
         </div>
       <?php endforeach; ?>
     </div>
 
+    <?php if (!extension_loaded('mongodb')): ?>
+      <div class="guide-box">
+        <h4>⚠️ PHP MongoDB Extension (php_mongodb.dll) Needed</h4>
+        To allow PHP to connect to MongoDB on Windows (XAMPP):
+        <ol>
+          <li>Download the matching <code>php_mongodb.dll</code> for PHP <?= PHP_VERSION ?> (Thread Safe x64) from PECL: <a href="https://pecl.php.net/package/mongodb" target="_blank" style="color:#b45309; font-weight:700;">pecl.php.net/package/mongodb</a></li>
+          <li>Place the downloaded <code>php_mongodb.dll</code> file into <code>C:\xampp\php\ext\</code></li>
+          <li>Open <code>C:\xampp\php\php.ini</code> and add: <code>extension=mongodb</code></li>
+          <li>Restart Apache in the XAMPP Control Panel and refresh this page.</li>
+        </ol>
+      </div>
+    <?php endif; ?>
+
     <?php if ($error): ?>
       <div class="alert alert-error">
-        <strong>Installation Error:</strong><br>
+        <strong>Setup Error:</strong><br>
         <?= e($error) ?>
       </div>
     <?php endif; ?>
@@ -306,8 +346,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['run_install'])) {
 
     <?php if ($success): ?>
       <div class="alert alert-success">
-        <strong>🎉 Installation Successful!</strong><br>
-        Database created, tables migrated, sample eco-products and admin credentials loaded.
+        <strong>🎉 MongoDB Initialization Successful!</strong><br>
+        Collections created, indexes built, sample products imported, and admin credentials configured.
       </div>
       <div style="background: #fbfcf9; border: 1px solid var(--border); padding: 15px; border-radius: 8px; font-size: 13px; margin-bottom: 20px;">
         <strong>Admin Login Credentials:</strong><br>
@@ -322,33 +362,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['run_install'])) {
     <?php else: ?>
 
       <form method="POST" action="">
-        <h3 style="font-size: 15px; margin-bottom: 14px;">2. MySQL Database Settings (XAMPP Defaults)</h3>
+        <h3 style="font-size: 15px; margin-bottom: 14px;">2. MongoDB Cluster Connection</h3>
         <div class="form-grid">
           <div class="form-group">
-            <label>Database Host</label>
-            <input type="text" name="db_host" value="127.0.0.1" required>
+            <label>MongoDB Connection URI (Cluster Link or Local)</label>
+            <textarea name="mongo_uri" rows="3" required placeholder="e.g. mongodb+srv://username:password@cluster0.abcde.mongodb.net/?retryWrites=true&w=majority"><?= e(env('MONGODB_URI', '')) ?></textarea>
+            <small style="color: var(--text-muted); font-size: 11px;">Paste your connection string from MongoDB Atlas or local MongoDB instance.</small>
           </div>
           <div class="form-group">
-            <label>Database Port</label>
-            <input type="number" name="db_port" value="3306" required>
-          </div>
-          <div class="form-group">
-            <label>Database Username</label>
-            <input type="text" name="db_user" value="root" required>
-          </div>
-          <div class="form-group">
-            <label>Database Password</label>
-            <input type="password" name="db_pass" value="" placeholder="Empty by default in XAMPP">
-          </div>
-          <div class="form-group full">
             <label>Database Name</label>
-            <input type="text" name="db_name" value="durva_eco_ware" required>
-            <small style="color: var(--text-muted); font-size: 11px;">If this database does not exist, the installer will create it automatically.</small>
+            <input type="text" name="db_name" value="<?= e(env('MONGODB_DATABASE', 'durva_eco_ware')) ?>" required>
           </div>
         </div>
 
         <h3 style="font-size: 15px; margin-top: 15px; margin-bottom: 14px;">3. Admin Account Setup</h3>
-        <div class="form-grid">
+        <div class="form-grid-2" style="margin-bottom: 20px;">
           <div class="form-group">
             <label>Admin Email</label>
             <input type="email" name="admin_email" value="admin@durvaecoware.com" required>
@@ -359,8 +387,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['run_install'])) {
           </div>
         </div>
 
-        <button type="submit" name="run_install" value="1" class="btn" style="margin-top: 15px;">
-          🚀 Install & Run Migrations
+        <button type="submit" name="run_install" value="1" class="btn">
+          🚀 Connect & Initialize MongoDB Collections
         </button>
       </form>
 

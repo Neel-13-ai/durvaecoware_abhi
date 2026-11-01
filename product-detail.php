@@ -17,8 +17,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     InquiryController::handleSubmit();
 }
 
-$id = clean_int($_GET['id'] ?? 0);
-$product = Product::getById($id);
+$id = clean_id($_GET['id'] ?? '');
+$slug = clean_string($_GET['slug'] ?? '');
+$product = !empty($slug) ? Product::getBySlug($slug) : (!empty($id) ? Product::getById($id) : null);
 
 if (!$product) {
     flash('error', 'The requested product was not found.', 'warning');

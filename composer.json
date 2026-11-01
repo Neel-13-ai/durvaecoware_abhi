@@ -1,0 +1,14 @@
+{
+    "name": "durvaecoware/web-app",
+    "description": "Durva Eco Ware - Sustainable Disposable Tableware Web Application",
+    "type": "project",
+    "require": {
+        "php": ">=7.4",
+        "mongodb/mongodb": "^1.17"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    }
+}

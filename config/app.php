@@ -36,6 +36,11 @@ if (file_exists($envFile)) {
     }
 }
 
+// Autoload Composer dependencies (e.g. MongoDB Client)
+if (file_exists(BASE_PATH . '/vendor/autoload.php')) {
+    require_once BASE_PATH . '/vendor/autoload.php';
+}
+
 // Helper to get environment variable with fallback
 function env($key, $default = null) {
     if (isset($_ENV[$key])) {

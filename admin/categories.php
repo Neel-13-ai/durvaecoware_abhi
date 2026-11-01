@@ -11,8 +11,8 @@ require_once BASE_PATH . '/app/Models/Category.php';
 
 require_admin();
 
-$editId = clean_int($_GET['edit'] ?? 0);
-$editCategory = $editId > 0 ? Category::getById($editId) : null;
+$editId = clean_id($_GET['edit'] ?? '');
+$editCategory = !empty($editId) ? Category::getById($editId) : null;
 
 // Handle Form Submissions (Create, Update, Delete)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -35,8 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'description' => $description
             ];
 
-            $id = clean_int($_POST['id'] ?? 0);
-            if ($id > 0) {
+            $id = clean_id($_POST['id'] ?? '');
+            if (!empty($id)) {
                 Category::update($id, $data);
                 flash('success', 'Category updated successfully.');
             } else {
@@ -48,8 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if ($action === 'delete') {
-        $id = clean_int($_POST['id'] ?? 0);
-        if ($id > 0) {
+        $id = clean_id($_POST['id'] ?? '');
+        if (!empty($id)) {
             Category::delete($id);
             flash('success', 'Category deleted successfully.');
         }
