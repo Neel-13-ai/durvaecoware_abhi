@@ -68,12 +68,13 @@ function get_base_url(): string {
     $scriptName = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '');
     
     // Find index or admin or public entry point directory
-    $scriptDir = dirname($scriptName);
+    $scriptDir = str_replace('\\', '/', dirname($scriptName));
     
     // If inside admin/ or database/ or other subfolder, resolve back to project root
     $scriptDir = preg_replace('#/(admin|database|app|includes|config).*$#', '', $scriptDir);
     
-    $baseSubdir = rtrim($scriptDir, '/');
+    $cleanSubdir = trim($scriptDir, '/\\');
+    $baseSubdir = !empty($cleanSubdir) ? '/' . $cleanSubdir : '';
 
     return $protocol . $host . $baseSubdir;
 }
