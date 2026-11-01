@@ -373,3 +373,4 @@ if (php_sapi_name() === 'cli' && basename(__FILE__) === basename($_SERVER['SCRIP
     echo "\nMongoDB setup completed successfully!\n";
     exit(0);
 }
+
