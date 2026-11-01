@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300">
+  <defs>
+    <linearGradient id="bowlGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f5e4c6"/>
+      <stop offset="50%" stop-color="#e2c695"/>
+      <stop offset="100%" stop-color="#bc9454"/>
+    </linearGradient>
+    <filter id="bowlShadow" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="12" stdDeviation="12" flood-color="#3c2a10" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+  <!-- Bowl Rim Background -->
+  <ellipse cx="150" cy="115" rx="105" ry="32" fill="#edd6ad" stroke="#a98342" stroke-width="2"/>
+  <ellipse cx="150" cy="115" rx="90" ry="24" fill="#dbc092" stroke="#ab8748" stroke-width="1"/>
+  <!-- Bowl Body -->
+  <path d="M 45 115 C 45 220, 255 220, 255 115 Z" fill="url(#bowlGrad)" filter="url(#bowlShadow)" stroke="#aa8444" stroke-width="2"/>
+  <!-- Top Front Lip -->
+  <ellipse cx="150" cy="115" rx="105" ry="16" fill="none" stroke="#f6e8d2" stroke-width="3"/>
+  <text x="150" y="170" text-anchor="middle" fill="#5f441c" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-size="14" font-weight="700">250 ML</text>
+  <text x="150" y="188" text-anchor="middle" fill="#755627" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-size="10" font-weight="600">LEAK-PROOF BOWL</text>
+</svg>

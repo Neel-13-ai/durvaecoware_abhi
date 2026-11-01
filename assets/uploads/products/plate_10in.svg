@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300">
+  <defs>
+    <radialGradient id="thaliGrad" cx="30%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#fff8e8"/>
+      <stop offset="60%" stop-color="#ead3aa"/>
+      <stop offset="100%" stop-color="#ba9251"/>
+    </radialGradient>
+    <filter id="shadowThali" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="12" stdDeviation="15" flood-color="#3c2a10" flood-opacity="0.22"/>
+    </filter>
+  </defs>
+  <circle cx="150" cy="150" r="132" fill="url(#thaliGrad)" filter="url(#shadowThali)" stroke="#a88242" stroke-width="2.5"/>
+  <circle cx="150" cy="150" r="120" fill="none" stroke="#ba9555" stroke-width="1.5" opacity="0.5"/>
+  <!-- Compartments -->
+  <!-- Top Left -->
+  <path d="M 85 85 Q 140 80 140 135 Q 80 135 85 85 Z" fill="#e5cca1" stroke="#a37c3c" stroke-width="1.8"/>
+  <!-- Top Right -->
+  <path d="M 160 135 Q 160 80 215 85 Q 220 135 160 135 Z" fill="#e5cca1" stroke="#a37c3c" stroke-width="1.8"/>
+  <!-- Bottom Main -->
+  <path d="M 80 155 Q 150 150 220 155 Q 210 225 150 228 Q 90 225 80 155 Z" fill="#e5cca1" stroke="#a37c3c" stroke-width="1.8"/>
+  <text x="150" y="195" text-anchor="middle" fill="#6c5026" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-size="13" font-weight="700" opacity="0.8">10" THALI TRAY</text>
+</svg>

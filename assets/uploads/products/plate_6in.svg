@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300">
+  <defs>
+    <radialGradient id="plateGrad" cx="38%" cy="32%" r="65%">
+      <stop offset="0%" stop-color="#fff8e8"/>
+      <stop offset="55%" stop-color="#edd5a8"/>
+      <stop offset="100%" stop-color="#c49f60"/>
+    </radialGradient>
+    <filter id="dropShadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#3c2a10" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+  <circle cx="150" cy="150" r="115" fill="url(#plateGrad)" filter="url(#dropShadow)" stroke="#b89354" stroke-width="2"/>
+  <circle cx="150" cy="150" r="85" fill="none" stroke="#ba9555" stroke-width="2" opacity="0.45"/>
+  <circle cx="150" cy="150" r="78" fill="none" stroke="#d5b47a" stroke-width="1" opacity="0.6"/>
+  <text x="150" y="155" text-anchor="middle" fill="#6c5026" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-size="14" font-weight="700" opacity="0.75">6 INCH</text>
+  <text x="150" y="172" text-anchor="middle" fill="#7d6133" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-size="10" font-weight="600" opacity="0.65">ECO PLATE</text>
+</svg>

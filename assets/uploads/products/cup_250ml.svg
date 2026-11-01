@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300">
+  <defs>
+    <linearGradient id="cupGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#cda66b"/>
+      <stop offset="35%" stop-color="#faedd8"/>
+      <stop offset="70%" stop-color="#dfbe8b"/>
+      <stop offset="100%" stop-color="#ba9151"/>
+    </linearGradient>
+    <filter id="cupShadow" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="12" stdDeviation="12" flood-color="#3c2a10" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+  <!-- Cup Rim -->
+  <ellipse cx="150" cy="70" rx="65" ry="14" fill="#eedbb9" stroke="#b08b49" stroke-width="2"/>
+  <!-- Cup Body -->
+  <polygon points="85,70 215,70 185,225 115,225" fill="url(#cupGrad)" filter="url(#cupShadow)" stroke="#ab8646" stroke-width="2"/>
+  <!-- Ripples / Grooves -->
+  <path d="M 92 100 Q 150 112 208 100" fill="none" stroke="#ba9557" stroke-width="2.5" opacity="0.6"/>
+  <path d="M 96 125 Q 150 137 204 125" fill="none" stroke="#ba9557" stroke-width="2.5" opacity="0.6"/>
+  <path d="M 100 150 Q 150 162 200 150" fill="none" stroke="#ba9557" stroke-width="2.5" opacity="0.6"/>
+  <path d="M 105 175 Q 150 187 195 175" fill="none" stroke="#ba9557" stroke-width="2.5" opacity="0.6"/>
+  <!-- Base Ellipse -->
+  <ellipse cx="150" cy="225" rx="35" ry="8" fill="#d2ab72" stroke="#ab8646" stroke-width="1.5"/>
+  <text x="150" y="260" text-anchor="middle" fill="#58401e" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-size="13" font-weight="800">250 ML RIPPLE CUP</text>
+</svg>

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300">
+  <defs>
+    <linearGradient id="kraftGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#edd9b4"/>
+      <stop offset="50%" stop-color="#d4b47f"/>
+      <stop offset="100%" stop-color="#b89357"/>
+    </linearGradient>
+    <filter id="boxShadow" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="12" stdDeviation="12" flood-color="#3c2a10" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+  <!-- Box Base -->
+  <polygon points="50,110 250,110 225,230 75,230" fill="url(#kraftGrad)" filter="url(#boxShadow)" stroke="#9c783c" stroke-width="2"/>
+  <!-- Lid -->
+  <rect x="40" y="90" width="220" height="28" rx="6" fill="#f5ede0" stroke="#c0a579" stroke-width="2"/>
+  <rect x="55" y="96" width="190" height="16" rx="3" fill="#e8dac4" opacity="0.6"/>
+  <text x="150" y="165" text-anchor="middle" fill="#58401e" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-size="14" font-weight="800">500 ML</text>
+  <text x="150" y="184" text-anchor="middle" fill="#755627" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-size="10" font-weight="600">KRAFT MEAL BOX</text>
+</svg>

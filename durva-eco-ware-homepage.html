@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Durva Eco Ware - Eco-friendly disposable plates, bowls and food containers for wholesale and bulk orders.">
+  <title>Durva Eco Ware | Eco-Friendly Disposable Products</title>
+
+  <style>
+    :root{
+      --green:#145c2a;
+      --green-2:#2f7d20;
+      --green-3:#4f972f;
+      --dark:#15351f;
+      --cream:#f4f8f0;
+      --cream-2:#fbfcf8;
+      --white:#fff;
+      --border:#dfe8dc;
+      --text:#243027;
+      --muted:#68736b;
+      --shadow:0 12px 35px rgba(20,92,42,.10);
+      --radius:18px;
+      --container:1180px;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:Arial,Helvetica,sans-serif;
+      color:var(--text);
+      background:#fff;
+      line-height:1.6;
+    }
+    a{text-decoration:none;color:inherit}
+    img{max-width:100%;display:block}
+    button,input,textarea{font:inherit}
+
+    .topbar{
+      background:#0b2f19;
+      color:#fff;
+      font-size:13px;
+    }
+    .topbar-inner{
+      max-width:var(--container);
+      margin:auto;
+      min-height:40px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:20px;
+      padding:0 20px;
+    }
+    .topbar-left,.topbar-right{
+      display:flex;
+      align-items:center;
+      gap:18px;
+    }
+
+    header{
+      background:rgba(255,255,255,.96);
+      border-bottom:1px solid #edf1eb;
+      position:sticky;
+      top:0;
+      z-index:1000;
+      backdrop-filter:blur(10px);
+    }
+    .nav{
+      max-width:var(--container);
+      height:88px;
+      margin:auto;
+      padding:0 20px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:30px;
+    }
+
+    .logo{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:205px;
+    }
+    .logo-mark{
+      width:48px;
+      height:58px;
+      position:relative;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:var(--green);
+    }
+    .logo-mark svg{width:48px;height:58px}
+    .logo-text strong{
+      display:block;
+      font-family:Georgia,serif;
+      font-size:22px;
+      line-height:1;
+      letter-spacing:.5px;
+      color:var(--dark);
+    }
+    .logo-text span{
+      font-size:8px;
+      color:#555;
+      letter-spacing:.4px;
+    }
+
+    .nav-links{
+      display:flex;
+      align-items:center;
+      gap:28px;
+      font-size:14px;
+      font-weight:600;
+    }
+    .nav-links a{
+      position:relative;
+      padding:8px 0;
+    }
+    .nav-links a:hover,
+    .nav-links a.active{color:var(--green)}
+    .nav-links a.active:after{
+      content:"";
+      position:absolute;
+      left:0;right:0;bottom:0;
+      height:2px;
+      background:var(--green);
+    }
+
+    .btn{
+      display:inline-flex;
+      justify-content:center;
+      align-items:center;
+      gap:8px;
+      border:0;
+      border-radius:9px;
+      padding:13px 20px;
+      cursor:pointer;
+      font-weight:700;
+      transition:.25s ease;
+    }
+    .btn-primary{
+      background:var(--green-2);
+      color:#fff;
+      box-shadow:0 6px 15px rgba(47,125,32,.18);
+    }
+    .btn-primary:hover{background:var(--green);transform:translateY(-2px)}
+    .btn-outline{
+      background:#fff;
+      color:var(--green);
+      border:1px solid var(--green-2);
+    }
+    .btn-outline:hover{
+      background:var(--cream);
+      transform:translateY(-2px);
+    }
+
+    .menu-toggle{
+      display:none;
+      background:none;
+      border:0;
+      font-size:29px;
+      color:var(--green);
+      cursor:pointer;
+    }
+
+    /* HERO */
+    .hero{
+      min-height:520px;
+      background:
+        radial-gradient(circle at 75% 50%,rgba(111,170,68,.16),transparent 30%),
+        linear-gradient(110deg,#fbfcf8 0%,#f1f7e9 100%);
+      overflow:hidden;
+      position:relative;
+    }
+    .hero:before,.hero:after{
+      content:"";
+      position:absolute;
+      width:190px;
+      height:300px;
+      border-radius:50%;
+      border:2px solid rgba(76,143,43,.12);
+      transform:rotate(-25deg);
+    }
+    .hero:before{left:-100px;top:100px}
+    .hero:after{right:-100px;top:90px}
+
+    .hero-inner{
+      max-width:var(--container);
+      min-height:520px;
+      margin:auto;
+      padding:55px 20px 35px;
+      display:grid;
+      grid-template-columns:43% 57%;
+      align-items:center;
+      gap:20px;
+      position:relative;
+      z-index:2;
+    }
+    .eyebrow{
+      color:var(--green-2);
+      font-weight:800;
+      letter-spacing:1.2px;
+      text-transform:uppercase;
+      font-size:12px;
+      margin-bottom:10px;
+    }
+    .hero h1{
+      font-family:Georgia,serif;
+      font-size:52px;
+      line-height:1.08;
+      color:var(--dark);
+      margin-bottom:12px;
+    }
+    .hero h1 span{color:var(--green-2)}
+    .hero p{
+      max-width:520px;
+      font-size:17px;
+      color:#4e5b52;
+      margin-bottom:25px;
+    }
+    .hero-buttons{display:flex;gap:15px;flex-wrap:wrap}
+
+    .hero-visual{
+      min-height:400px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      position:relative;
+    }
+
+    .eco-badge{
+      position:absolute;
+      top:30px;
+      right:65px;
+      width:115px;
+      height:115px;
+      border:3px solid var(--green-2);
+      background:rgba(255,255,255,.9);
+      border-radius:50%;
+      z-index:5;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      color:var(--green-2);
+      font-weight:900;
+      line-height:1.05;
+      box-shadow:var(--shadow);
+    }
+    .eco-badge small{display:block;font-size:11px}
+
+    .product-scene{
+      width:520px;
+      height:350px;
+      position:relative;
+    }
+    .leaf{
+      position:absolute;
+      background:linear-gradient(135deg,#75ad45,#1f6b2c);
+      border-radius:100% 0 100% 0;
+      transform:rotate(30deg);
+      opacity:.95;
+    }
+    .leaf.l1{width:105px;height:45px;left:15px;top:100px}
+    .leaf.l2{width:120px;height:48px;left:35px;top:150px;transform:rotate(65deg)}
+    .leaf.l3{width:110px;height:46px;right:5px;top:90px;transform:rotate(110deg)}
+    .leaf.l4{width:100px;height:44px;right:25px;bottom:40px;transform:rotate(145deg)}
+
+    .plate{
+      position:absolute;
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 35% 30%,#fff5df,#ead3a8 58%,#c7a76f 100%);
+      box-shadow:0 18px 25px rgba(65,52,30,.18), inset 0 0 0 5px rgba(145,112,58,.18);
+    }
+    .plate:after{
+      content:"";
+      position:absolute;
+      inset:12%;
+      border-radius:50%;
+      border:3px solid rgba(151,116,61,.22);
+    }
+    .p1{width:220px;height:220px;left:160px;top:25px;transform:rotate(-8deg)}
+    .p2{width:155px;height:155px;left:85px;top:130px;transform:rotate(10deg)}
+    .p3{width:140px;height:140px;right:40px;top:145px;transform:rotate(-15deg)}
+    .bowl{
+      position:absolute;
+      width:150px;height:72px;
+      left:230px;bottom:12px;
+      border-radius:0 0 75px 75px;
+      background:linear-gradient(#f1ddba,#c69d5e);
+      box-shadow:0 16px 22px rgba(65,52,30,.18);
+    }
+    .bowl:before{
+      content:"";
+      position:absolute;
+      width:150px;height:42px;
+      top:-15px;left:0;
+      border-radius:50%;
+      background:#ecd4aa;
+      box-shadow:inset 0 0 0 5px rgba(137,103,49,.18);
+    }
+    .cup{
+      position:absolute;
+      right:10px;bottom:45px;
+      width:62px;height:80px;
+      border-radius:8px 8px 22px 22px;
+      background:linear-gradient(90deg,#d0ad74,#f0dbb7,#c69c5b);
+      transform:rotate(7deg);
+    }
+    .cup:before{
+      content:"";
+      position:absolute;
+      top:-8px;left:-4px;
+      width:70px;height:20px;
+      border-radius:50%;
+      background:#f2dfc0;
+      box-shadow:inset 0 0 0 3px rgba(125,95,47,.15);
+    }
+
+    /* FEATURES */
+    .features-wrap{
+      max-width:1050px;
+      margin:-35px auto 0;
+      position:relative;
+      z-index:10;
+      padding:0 20px;
+    }
+    .features{
+      background:#fff;
+      border-radius:18px;
+      box-shadow:0 12px 35px rgba(22,52,29,.12);
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      overflow:hidden;
+      border:1px solid #edf1e9;
+    }
+    .feature{
+      padding:22px 15px;
+      text-align:center;
+      border-right:1px solid #e5eae1;
+    }
+    .feature:last-child{border-right:0}
+    .feature-icon{font-size:26px;margin-bottom:5px}
+    .feature h4{font-size:14px;color:var(--dark);margin-bottom:3px}
+    .feature p{font-size:11px;color:var(--muted);line-height:1.4}
+
+    /* SECTION */
+    .section{
+      padding:80px 20px;
+    }
+    .section-inner{
+      max-width:var(--container);
+      margin:auto;
+    }
+    .section-head{text-align:center;margin-bottom:38px}
+    .section-head h2{
+      font-family:Georgia,serif;
+      color:var(--dark);
+      font-size:37px;
+      line-height:1.2;
+      margin-bottom:8px;
+    }
+    .section-head h2 span{color:var(--green-2)}
+    .section-head p{color:var(--muted)}
+
+    /* PRODUCTS */
+    .products{background:#fff}
+    .product-grid{
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:18px;
+    }
+    .product-card{
+      border:1px solid #e3e9df;
+      border-radius:16px;
+      background:#fff;
+      padding:14px;
+      transition:.25s ease;
+    }
+    .product-card:hover{
+      transform:translateY(-6px);
+      box-shadow:var(--shadow);
+      border-color:#c9dbc4;
+    }
+    .product-image{
+      height:190px;
+      border-radius:12px;
+      background:linear-gradient(145deg,#faf9f2,#eef4e8);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      margin-bottom:15px;
+      position:relative;
+    }
+    .mini-plate{
+      width:135px;height:135px;
+      border-radius:50%;
+      background:radial-gradient(circle,#fff4db 0,#e9d09f 63%,#bd9757 100%);
+      box-shadow:0 12px 18px rgba(60,50,30,.18),inset 0 0 0 5px rgba(130,98,48,.16);
+      position:relative;
+    }
+    .mini-plate:after{
+      content:"";
+      position:absolute;
+      inset:18px;
+      border:3px solid rgba(139,103,47,.2);
+      border-radius:50%;
+    }
+    .mini-plate.small{width:105px;height:105px}
+    .stack{
+      position:relative;
+      width:145px;height:130px;
+    }
+    .stack .mini-plate{position:absolute}
+    .stack .one{left:0;top:12px}
+    .stack .two{left:20px;top:4px}
+    .stack .three{left:40px;top:0}
+    .bowl-icon{
+      width:130px;height:75px;
+      border-radius:0 0 75px 75px;
+      background:linear-gradient(#f0d9b0,#c69b5c);
+      position:relative;
+      box-shadow:0 14px 18px rgba(50,40,25,.16);
+    }
+    .bowl-icon:before{
+      content:"";
+      position:absolute;
+      top:-12px;left:0;
+      width:130px;height:38px;
+      border-radius:50%;
+      background:#edd7ae;
+      box-shadow:inset 0 0 0 4px rgba(130,97,45,.18);
+    }
+    .container-icon{
+      width:150px;height:105px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:7px;
+      transform:rotate(-4deg);
+    }
+    .container-icon div{
+      background:linear-gradient(145deg,#f0dcb7,#c39a5d);
+      border-radius:9px;
+      box-shadow:0 8px 12px rgba(60,50,30,.14);
+    }
+    .product-card h3{font-size:15px;text-align:center;margin-bottom:5px;color:#111}
+    .product-card p{text-align:center;color:var(--muted);font-size:12px;margin-bottom:13px}
+    .product-card .btn{width:100%;padding:9px;font-size:12px}
+
+    .center-btn{text-align:center;margin-top:30px}
+
+    /* ABOUT */
+    .about{
+      background:var(--cream);
+    }
+    .about-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:55px;
+      align-items:center;
+    }
+    .about-art{
+      min-height:370px;
+      border-radius:25px;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(94,146,50,.18),transparent 52%),
+        #edf4e7;
+      position:relative;
+      overflow:hidden;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+    .about-art .large-leaf{
+      width:280px;height:150px;
+      background:linear-gradient(135deg,#78b34a,#276f2f);
+      border-radius:100% 0 100% 0;
+      transform:rotate(-25deg);
+      opacity:.95;
+    }
+    .about-content .eyebrow{margin-bottom:8px}
+    .about-content h2{
+      font-family:Georgia,serif;
+      color:var(--dark);
+      font-size:38px;
+      line-height:1.15;
+      margin-bottom:15px;
+    }
+    .about-content p{color:#59645c;margin-bottom:18px}
+    .checks{display:grid;gap:10px}
+    .check{display:flex;gap:10px;align-items:center;font-weight:600}
+    .check span{
+      width:23px;height:23px;
+      display:grid;place-items:center;
+      background:#dcebd5;
+      color:var(--green);
+      border-radius:50%;
+      font-size:13px;
+    }
+
+    /* WHOLESALE */
+    .wholesale{
+      background:#0d4421;
+      color:#fff;
+      position:relative;
+      overflow:hidden;
+    }
+    .wholesale:before{
+      content:"";
+      position:absolute;
+      width:500px;height:500px;
+      right:-220px;top:-220px;
+      border:2px solid rgba(255,255,255,.08);
+      border-radius:50%;
+    }
+    .wholesale-inner{
+      max-width:var(--container);
+      margin:auto;
+      display:grid;
+      grid-template-columns:1.4fr .8fr;
+      gap:50px;
+      align-items:center;
+      position:relative;
+      z-index:2;
+    }
+    .wholesale h2{
+      font-family:Georgia,serif;
+      font-size:39px;
+      line-height:1.2;
+      margin-bottom:12px;
+    }
+    .wholesale p{color:#d6e6d7;max-width:650px}
+    .quote-box{
+      background:#fff;
+      color:var(--text);
+      border-radius:18px;
+      padding:25px;
+      box-shadow:0 15px 35px rgba(0,0,0,.18);
+    }
+    .quote-box h3{color:var(--dark);margin-bottom:15px}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .field{
+      width:100%;
+      padding:12px 13px;
+      border:1px solid #dce4d9;
+      border-radius:8px;
+      outline:none;
+      margin-bottom:10px;
+      background:#fbfcfa;
+    }
+    .field:focus{border-color:var(--green-2)}
+    textarea.field{min-height:85px;resize:vertical}
+
+    /* FOOTER */
+    footer{
+      background:#082b16;
+      color:#d8e4da;
+      padding:55px 20px 20px;
+    }
+    .footer-grid{
+      max-width:var(--container);
+      margin:auto;
+      display:grid;
+      grid-template-columns:1.5fr 1fr 1fr 1.2fr;
+      gap:35px;
+    }
+    footer h3{color:#fff;margin-bottom:15px;font-size:16px}
+    footer p,footer a{font-size:13px;color:#b9c8bc}
+    footer a:hover{color:#fff}
+    .footer-links{display:grid;gap:8px}
+    .footer-bottom{
+      max-width:var(--container);
+      margin:35px auto 0;
+      padding-top:18px;
+      border-top:1px solid rgba(255,255,255,.1);
+      text-align:center;
+      font-size:12px;
+      color:#94a79a;
+    }
+
+    .floating-whatsapp{
+      position:fixed;
+      right:22px;
+      bottom:22px;
+      width:55px;height:55px;
+      background:#1da851;
+      color:#fff;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      font-size:26px;
+      box-shadow:0 8px 20px rgba(0,0,0,.2);
+      z-index:100;
+    }
+
+    /* MOBILE */
+    @media(max-width:1050px){
+      .nav-links{gap:17px}
+      .product-grid{grid-template-columns:repeat(3,1fr)}
+      .hero h1{font-size:45px}
+    }
+
+    @media(max-width:800px){
+      .topbar-inner{
+        justify-content:center;
+        font-size:11px;
+      }
+      .topbar-right{display:none}
+      .topbar-left{gap:10px}
+
+      .nav{height:74px}
+      .logo{min-width:auto}
+      .logo-text strong{font-size:18px}
+      .logo-mark{width:40px;height:48px}
+      .logo-mark svg{width:40px;height:48px}
+
+      .menu-toggle{display:block}
+      .nav-links{
+        display:none;
+        position:absolute;
+        left:0;right:0;top:74px;
+        background:#fff;
+        padding:18px 22px 25px;
+        box-shadow:0 15px 25px rgba(0,0,0,.08);
+        flex-direction:column;
+        align-items:stretch;
+        gap:0;
+      }
+      .nav-links.open{display:flex}
+      .nav-links a{padding:12px 0;border-bottom:1px solid #edf1eb}
+      .nav .nav-cta{display:none}
+
+      .hero{min-height:auto}
+      .hero-inner{
+        min-height:auto;
+        padding:48px 20px 25px;
+        grid-template-columns:1fr;
+        text-align:center;
+      }
+      .hero h1{font-size:38px}
+      .hero p{font-size:15px;margin-left:auto;margin-right:auto}
+      .hero-buttons{justify-content:center}
+      .hero-visual{min-height:300px;margin-top:10px}
+      .product-scene{transform:scale(.78);margin:-30px 0}
+      .eco-badge{right:15px;top:0;transform:scale(.8)}
+
+      .features-wrap{margin:0;padding:0 15px}
+      .features{
+        grid-template-columns:repeat(2,1fr);
+        margin-top:15px;
+      }
+      .feature:nth-child(2){border-right:0}
+      .feature:nth-child(3),
+      .feature:nth-child(4),
+      .feature:nth-child(5){border-top:1px solid #e5eae1}
+      .feature:last-child{grid-column:1/-1;border-right:0}
+
+      .section{padding:60px 18px}
+      .section-head h2{font-size:30px}
+
+      .product-grid{grid-template-columns:repeat(2,1fr);gap:12px}
+      .product-image{height:150px}
+      .product-card{padding:10px}
+      .product-card h3{font-size:13px}
+
+      .about-grid{grid-template-columns:1fr;gap:30px}
+      .about-art{min-height:280px}
+      .about-content h2{font-size:31px}
+
+      .wholesale-inner{grid-template-columns:1fr;gap:30px}
+      .wholesale h2{font-size:31px}
+      .form-row{grid-template-columns:1fr}
+
+      .footer-grid{grid-template-columns:1fr 1fr;gap:28px}
+    }
+
+    @media(max-width:480px){
+      .topbar-left span:nth-child(2){display:none}
+      .hero h1{font-size:34px}
+      .hero-buttons .btn{width:100%}
+      .hero-visual{min-height:270px}
+      .product-scene{transform:scale(.62);margin:-60px 0}
+      .features{grid-template-columns:1fr 1fr}
+      .feature{padding:17px 8px}
+      .feature h4{font-size:12px}
+      .feature p{font-size:10px}
+      .product-grid{grid-template-columns:1fr 1fr}
+      .product-image{height:125px}
+      .mini-plate{width:95px;height:95px}
+      .mini-plate.small{width:80px;height:80px}
+      .stack{transform:scale(.8)}
+      .bowl-icon{transform:scale(.8)}
+      .container-icon{transform:scale(.75) rotate(-4deg)}
+      .footer-grid{grid-template-columns:1fr}
+      .floating-whatsapp{right:15px;bottom:15px}
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-left">
+        <span>☎ +91 98765 43210</span>
+        <span>✉ info@durvaecoware.com</span>
+      </div>
+      <div>Eco-Friendly Products for a Better Tomorrow</div>
+      <div class="topbar-right">
+        <span>f</span><span>◎</span><span>◉</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header>
+    <nav class="nav">
+      <a href="#home" class="logo">
+        <div class="logo-mark">
+          <svg viewBox="0 0 60 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M30 66C26 53 18 44 7 36C7 22 16 8 31 4C43 13 51 26 49 40C47 51 39 59 30 66Z" stroke="#2f7d20" stroke-width="2.5"/>
+            <path d="M30 62C30 45 30 25 31 8" stroke="#2f7d20" stroke-width="2.2"/>
+            <path d="M30 39C22 34 17 29 13 22M30 47C39 40 44 33 46 25" stroke="#2f7d20" stroke-width="1.8"/>
+          </svg>
+        </div>
+        <div class="logo-text">
+          <strong>DURVA<br>ECO WARE</strong>
+          <span>Better Products. Better Planet.</span>
+        </div>
+      </a>
+
+      <div class="nav-links" id="navLinks">
+        <a href="#home" class="active">Home</a>
+        <a href="#products">Products</a>
+        <a href="#about">About Us</a>
+        <a href="#why">Why Durva</a>
+        <a href="#wholesale">Wholesale / Distributor</a>
+        <a href="#contact">Contact Us</a>
+      </div>
+
+      <a href="#wholesale" class="btn btn-primary nav-cta">Get Wholesale Quote</a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Open menu">☰</button>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <main id="home">
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="hero-content">
+          <div class="eyebrow">Sustainable • Quality • Reliable</div>
+          <h1>Eco-Friendly<br>Disposable Products<br><span>for Every Occasion</span></h1>
+          <p>
+            Durva Eco Ware offers a wide range of eco-friendly disposable
+            products made from natural and renewable materials.
+            Safe for you, safe for the planet.
+          </p>
+
+          <div class="hero-buttons">
+            <a href="#products" class="btn btn-primary">View Products 🌿</a>
+            <a href="#wholesale" class="btn btn-outline">Get Wholesale Quote ↗</a>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="eco-badge">100%<br>ECO<br><small>FRIENDLY</small></div>
+
+          <div class="product-scene" aria-label="Eco-friendly disposable product illustration">
+            <div class="leaf l1"></div>
+            <div class="leaf l2"></div>
+            <div class="leaf l3"></div>
+            <div class="leaf l4"></div>
+
+            <div class="plate p1"></div>
+            <div class="plate p2"></div>
+            <div class="plate p3"></div>
+            <div class="bowl"></div>
+            <div class="cup"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <div class="features-wrap" id="why">
+      <div class="features">
+        <div class="feature">
+          <div class="feature-icon">🌱</div>
+          <h4>100% Eco-Friendly</h4>
+          <p>Made from natural & renewable resources</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🏅</div>
+          <h4>Premium Quality</h4>
+          <p>Strong, durable & food safe products</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">📦</div>
+          <h4>Bulk Supply</h4>
+          <p>Available for bulk orders at best prices</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🚚</div>
+          <h4>On-Time Delivery</h4>
+          <p>Reliable delivery across India</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🏷️</div>
+          <h4>Custom Branding</h4>
+          <p>Custom printing & packaging available</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUCTS -->
+    <section class="section products" id="products">
+      <div class="section-inner">
+        <div class="section-head">
+          <h2>Our Products <span>🌿</span></h2>
+          <p>Wide range of sustainable & compostable disposable products</p>
+        </div>
+
+        <div class="product-grid">
+
+          <article class="product-card">
+            <div class="product-image">
+              <div class="stack">
+                <div class="mini-plate one"></div>
+                <div class="mini-plate two"></div>
+                <div class="mini-plate three"></div>
+              </div>
+            </div>
+            <h3>6 Inch Paper Plate</h3>
+            <p>100 Pcs / Pack</p>
+            <a href="#wholesale" class="btn btn-outline">View Details</a>
+          </article>
+
+          <article class="product-card">
+            <div class="product-image">
+              <div class="mini-plate"></div>
+            </div>
+            <h3>7 Inch Paper Plate</h3>
+            <p>100 Pcs / Pack</p>
+            <a href="#wholesale" class="btn btn-outline">View Details</a>
+          </article>
+
+          <article class="product-card">
+            <div class="product-image">
+              <div class="bowl-icon"></div>
+            </div>
+            <h3>Paper Bowls</h3>
+            <p>100 Pcs / Pack</p>
+            <a href="#wholesale" class="btn btn-outline">View Details</a>
+          </article>
+
+          <article class="product-card">
+            <div class="product-image">
+              <div class="stack">
+                <div class="mini-plate one"></div>
+                <div class="mini-plate two"></div>
+              </div>
+            </div>
+            <h3>Disposable Plates</h3>
+            <p>50 Pcs / Pack</p>
+            <a href="#wholesale" class="btn btn-outline">View Details</a>
+          </article>
+
+          <article class="product-card">
+            <div class="product-image">
+              <div class="container-icon">
+                <div></div><div></div><div></div><div></div>
+              </div>
+            </div>
+            <h3>Food Containers</h3>
+            <p>50 Pcs / Pack</p>
+            <a href="#wholesale" class="btn btn-outline">View Details</a>
+          </article>
+
+        </div>
+
+        <div class="center-btn">
+          <a href="#wholesale" class="btn btn-outline">View All Products →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="section about" id="about">
+      <div class="section-inner about-grid">
+
+        <div class="about-art">
+          <div class="large-leaf"></div>
+        </div>
+
+        <div class="about-content">
+          <div class="eyebrow">About Durva Eco Ware</div>
+          <h2>Better Products.<br><span style="color:#2f7d20">Better Planet.</span></h2>
+          <p>
+            Durva Eco Ware is focused on providing quality eco-friendly
+            disposable products for restaurants, caterers, retailers,
+            distributors, events and everyday food service needs.
+          </p>
+          <p>
+            Our goal is simple: provide dependable products that help
+            businesses reduce their dependence on conventional disposable
+            materials without compromising quality.
+          </p>
+
+          <div class="checks">
+            <div class="check"><span>✓</span> Quality-focused products</div>
+            <div class="check"><span>✓</span> Bulk & wholesale supply</div>
+            <div class="check"><span>✓</span> Competitive pricing</div>
+            <div class="check"><span>✓</span> Custom packaging options</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHOLESALE -->
+    <section class="section wholesale" id="wholesale">
+      <div class="wholesale-inner">
+
+        <div>
+          <div class="eyebrow" style="color:#a9d88c">Wholesale & Distribution</div>
+          <h2>Looking for Bulk<br>Eco-Friendly Products?</h2>
+          <p>
+            Partner with Durva Eco Ware for wholesale orders, retail supply,
+            restaurant requirements, catering businesses and distribution.
+            Send us your requirement and our team will contact you.
+          </p>
+          <br>
+          <a href="https://wa.me/919876543210?text=Hello%20Durva%20Eco%20Ware,%20I%20am%20interested%20in%20wholesale%20products."
+             target="_blank" class="btn btn-primary">WhatsApp Us</a>
+        </div>
+
+        <div class="quote-box">
+          <h3>Request a Wholesale Quote</h3>
+          <form id="quoteForm">
+            <div class="form-row">
+              <input class="field" type="text" id="name" placeholder="Your Name" required>
+              <input class="field" type="tel" id="phone" placeholder="Phone Number" required>
+            </div>
+            <input class="field" type="email" id="email" placeholder="Email Address">
+            <input class="field" type="text" id="company" placeholder="Company / Business Name">
+            <textarea class="field" id="message" placeholder="Tell us your product and quantity requirement"></textarea>
+            <button type="submit" class="btn btn-primary" style="width:100%">Send Inquiry</button>
+          </form>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer id="contact">
+    <div class="footer-grid">
+
+      <div>
+        <h3>Durva Eco Ware</h3>
+        <p>
+          Eco-friendly disposable products for restaurants,
+          caterers, retailers, events and wholesale customers.
+        </p>
+        <br>
+        <p><strong>Better Products. Better Planet.</strong></p>
+      </div>
+
+      <div>
+        <h3>Quick Links</h3>
+        <div class="footer-links">
+          <a href="#home">Home</a>
+          <a href="#products">Products</a>
+          <a href="#about">About Us</a>
+          <a href="#why">Why Durva</a>
+          <a href="#wholesale">Wholesale</a>
+        </div>
+      </div>
+
+      <div>
+        <h3>Products</h3>
+        <div class="footer-links">
+          <a href="#products">6 Inch Paper Plates</a>
+          <a href="#products">7 Inch Paper Plates</a>
+          <a href="#products">Paper Bowls</a>
+          <a href="#products">Disposable Plates</a>
+          <a href="#products">Food Containers</a>
+        </div>
+      </div>
+
+      <div>
+        <h3>Contact Us</h3>
+        <div class="footer-links">
+          <a href="tel:+919876543210">☎ +91 98765 43210</a>
+          <a href="mailto:info@durvaecoware.com">✉ info@durvaecoware.com</a>
+          <a href="https://wa.me/919876543210" target="_blank">◉ WhatsApp</a>
+          <span>📍 Gujarat, India</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="footer-bottom">
+      © <span id="year"></span> Durva Eco Ware. All Rights Reserved.
+    </div>
+  </footer>
+
+  <a class="floating-whatsapp"
+     href="https://wa.me/919876543210?text=Hello%20Durva%20Eco%20Ware"
+     target="_blank"
+     aria-label="WhatsApp">◉</a>
+
+  <script>
+    // Mobile menu
+    const menuToggle = document.getElementById("menuToggle");
+    const navLinks = document.getElementById("navLinks");
+
+    menuToggle.addEventListener("click", () => {
+      navLinks.classList.toggle("open");
+      menuToggle.textContent = navLinks.classList.contains("open") ? "✕" : "☰";
+    });
+
+    // Close mobile menu after clicking a link
+    document.querySelectorAll(".nav-links a").forEach(link => {
+      link.addEventListener("click", () => {
+        navLinks.classList.remove("open");
+        menuToggle.textContent = "☰";
+      });
+    });
+
+    // Current year
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // Demo quote form -> WhatsApp
+    document.getElementById("quoteForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const company = document.getElementById("company").value.trim();
+      const message = document.getElementById("message").value.trim();
+
+      const text =
+        "Wholesale Inquiry - Durva Eco Ware%0A%0A" +
+        "Name: " + encodeURIComponent(name) + "%0A" +
+        "Phone: " + encodeURIComponent(phone) + "%0A" +
+        "Email: " + encodeURIComponent(email) + "%0A" +
+        "Company: " + encodeURIComponent(company) + "%0A" +
+        "Requirement: " + encodeURIComponent(message);
+
+      window.open("https://wa.me/919876543210?text=" + text, "_blank");
+    });
+
+    // Highlight active navigation item while scrolling
+    const sections = document.querySelectorAll("main section[id], footer[id]");
+    const navItems = document.querySelectorAll(".nav-links a");
+
+    window.addEventListener("scroll", () => {
+      let current = "home";
+
+      sections.forEach(section => {
+        const top = section.offsetTop - 130;
+        if (window.scrollY >= top) current = section.id;
+      });
+
+      navItems.forEach(item => {
+        item.classList.toggle(
+          "active",
+          item.getAttribute("href") === "#" + current
+        );
+      });
+    });
+  </script>
+
+</body>
+</html>

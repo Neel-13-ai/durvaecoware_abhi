@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300">
+  <defs>
+    <linearGradient id="bowl180Grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fdf1dc"/>
+      <stop offset="60%" stop-color="#ebd1a3"/>
+      <stop offset="100%" stop-color="#c1995a"/>
+    </linearGradient>
+    <filter id="bowl180Shadow" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#3c2a10" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+  <ellipse cx="150" cy="120" rx="90" ry="26" fill="#eed8b2" stroke="#b08b49" stroke-width="1.8"/>
+  <ellipse cx="150" cy="120" rx="78" ry="20" fill="#dfc699" stroke="#b08b49" stroke-width="1"/>
+  <path d="M 60 120 C 60 215, 240 215, 240 120 Z" fill="url(#bowl180Grad)" filter="url(#bowl180Shadow)" stroke="#af8b4a" stroke-width="2"/>
+  <text x="150" y="168" text-anchor="middle" fill="#5f441c" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-size="13" font-weight="700">180 ML</text>
+  <text x="150" y="185" text-anchor="middle" fill="#755627" font-family="'Plus Jakarta Sans', Arial, sans-serif" font-size="9" font-weight="600">DESSERT BOWL</text>
+</svg>
